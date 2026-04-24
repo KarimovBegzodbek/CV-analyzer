@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center py-4">
+    <div class="col-md-8 col-lg-6">
+        <div class="glass-card p-5">
+            <div class="text-center mb-5">
+                <h2 class="fw-bold">{{ _('Upload Your CV') }}</h2>
+                <p class="text-secondary">{{ _('Supported formats') }}: PDF, DOCX</p>
+            </div>
+            
+            <form method="POST" action="{{ url_for('main.upload') }}" enctype="multipart/form-data" id="uploadForm">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                <div class="upload-area mb-4" id="dropArea" onclick="document.getElementById('fileInput').click()">
+                    <div class="mb-3">
+                        <i class="bi bi-cloud-arrow-up display-1 text-primary opacity-75"></i>
+                    </div>
+                    <h5 class="mb-2">{{ _('Click or drag file to this area to upload') }}</h5>
+                    <p class="text-secondary small">{{ _('Maximum file size') }}: 16MB</p>
+                    <input type="file" name="cv_file" id="fileInput" class="d-none" accept=".pdf,.docx" required>
+                </div>
+                
+                <div id="fileInfo" class="d-none mb-4 p-3 bg-primary bg-opacity-10 border border-primary border-opacity-25 rounded d-flex align-items-center justify-content-between">
+                    <div class="d-flex align-items-center">
+                        <i class="bi bi-file-earmark-text text-primary fs-4 me-3"></i>
+                        <span id="fileName" class="text-white fw-medium text-truncate" style="max-width: 200px;"></span>
+                    </div>
+                    <button type="button" class="btn btn-sm btn-outline-danger" id="removeFile">
+                        <i class="bi bi-x-lg"></i>
+                    </button>
+                </div>
+                
+                <button type="submit" class="btn btn-primary btn-lg w-100 rounded-pill" id="submitBtn" disabled>
+                    {{ _('Analyze CV') }} <i class="bi bi-arrow-right ms-2"></i>
+                </button>
+            </form>
+            
+            <div id="loadingIndicator" class="d-none text-center mt-4">
+                <div class="spinner-border text-primary mb-3" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <h5 class="text-gradient">{{ _('Analyzing your CV...') }}</h5>
+                <p class="text-secondary small">{{ _('Our AI is reading your document and generating feedback.') }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const dropArea = document.getElementById('dropArea');
+    const fileInput = document.getElementById('fileInput');
+    const fileInfo = document.getElementById('fileInfo');
+    const fileName = document.getElementById('fileName');
+    const removeFile = document.getElementById('removeFile');
+    const submitBtn = document.getElementById('submitBtn');
+    const uploadForm = document.getElementById('uploadForm');
+    const loadingIndicator = document.getElementById('loadingIndicator');
+
+    // Prevent default drag behaviors
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        dropArea.addEventListener(eventName, preventDefaults, false);
+        document.body.addEventListener(eventName, preventDefaults, false);
+    });
+
+    function preventDefaults(e) {
+        e.preventDefault();
+        e.stopPropagation();
+    }
+
+    // Highlight drop area when item is dragged over it
+    ['dragenter', 'dragover'].forEach(eventName => {
+        dropArea.addEventListener(eventName, highlight, false);
+    });
+
+    ['dragleave', 'drop'].forEach(eventName => {
+        dropArea.addEventListener(eventName, unhighlight, false);
+    });
+
+    function highlight(e) {
+        dropArea.classList.add('dragover');
+    }
+
+    function unhighlight(e) {
+        dropArea.classList.remove('dragover');
+    }
+
+    // Handle dropped files
+    dropArea.addEventListener('drop', handleDrop, false);
+
+    function handleDrop(e) {
+        const dt = e.dataTransfer;
+        const files = dt.files;
+        handleFiles(files);
+    }
+
+    fileInput.addEventListener('change', function() {
+        handleFiles(this.files);
+    });
+
+    function handleFiles(files) {
+        if (files.length > 0) {
+            const file = files[0];
+            const ext = file.name.split('.').pop().toLowerCase();
+            
+            if (ext === 'pdf' || ext === 'docx') {
+                fileInput.files = files;
+                fileName.textContent = file.name;
+                dropArea.classList.add('d-none');
+                fileInfo.classList.remove('d-none');
+                submitBtn.disabled = false;
+            } else {
+                alert('Please upload a PDF or DOCX file.');
+            }
+        }
+    }
+
+    removeFile.addEventListener('click', function() {
+        fileInput.value = '';
+        dropArea.classList.remove('d-none');
+        fileInfo.classList.add('d-none');
+        submitBtn.disabled = true;
+    });
+
+    uploadForm.addEventListener('submit', function() {
+        submitBtn.classList.add('d-none');
+        loadingIndicator.classList.remove('d-none');
+    });
+</script>
+{% endblock %}

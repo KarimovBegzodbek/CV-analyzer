@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row mb-4 align-items-center">
+    <div class="col-md-8">
+        <h2 class="mb-0">{{ _('Welcome,') }} {{ current_user.first_name }}!</h2>
+        <p class="text-secondary mt-1">{{ _('Manage and view your CV analysis history.') }}</p>
+    </div>
+    <div class="col-md-4 text-md-end mt-3 mt-md-0">
+        <a href="{{ url_for('main.upload') }}" class="btn btn-primary rounded-pill px-4 shadow-sm">
+            <i class="bi bi-cloud-upload me-2"></i> {{ _('Upload New CV') }}
+        </a>
+    </div>
+</div>
+
+<div class="glass-card p-4">
+    <h4 class="mb-4">{{ _('Your Uploaded CVs') }}</h4>
+    
+    {% if cvs %}
+        <div class="table-responsive">
+            <table class="table table-dark table-hover align-middle" style="background: transparent;">
+                <thead>
+                    <tr>
+                        <th class="border-secondary text-secondary">{{ _('File') }}</th>
+                        <th class="border-secondary text-secondary">{{ _('Upload Date') }}</th>
+                        <th class="border-secondary text-secondary">{{ _('Overall Score') }}</th>
+                        <th class="border-secondary text-secondary text-end">{{ _('Action') }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for cv in cvs %}
+                        <tr>
+                            <td class="border-secondary border-opacity-10 py-3">
+                                <div class="d-flex align-items-center">
+                                    <div class="bg-primary bg-opacity-25 p-2 rounded me-3 text-primary">
+                                        <i class="bi bi-file-earmark-text"></i>
+                                    </div>
+                                    <span class="text-truncate" style="max-width: 200px;">{{ cv.file_path.split('\\')[-1] }}</span>
+                                </div>
+                            </td>
+                            <td class="border-secondary border-opacity-10 py-3 text-secondary">
+                                {{ cv.uploaded_at.strftime('%Y-%m-%d %H:%M') }}
+                            </td>
+                            <td class="border-secondary border-opacity-10 py-3">
+                                {% if cv.analyses %}
+                                    {% set score = cv.analyses[-1].overall_score|round(1) %}
+                                    <span class="badge rounded-pill {% if score >= 80 %}bg-success{% elif score >= 60 %}bg-warning{% else %}bg-danger{% endif %} bg-opacity-25 {% if score >= 80 %}text-success{% elif score >= 60 %}text-warning{% else %}text-danger{% endif %} border {% if score >= 80 %}border-success{% elif score >= 60 %}border-warning{% else %}border-danger{% endif %} px-3 py-2">
+                                        {{ score }}%
+                                    </span>
+                                {% else %}
+                                    <span class="badge bg-secondary rounded-pill px-3 py-2">{{ _('Pending') }}</span>
+                                {% endif %}
+                            </td>
+                            <td class="border-secondary border-opacity-10 py-3 text-end">
+                                {% if cv.analyses %}
+                                    <a href="{{ url_for('main.results', analysis_id=cv.analyses[-1].id) }}" class="btn btn-sm btn-outline-primary rounded-pill px-3">{{ _('View Results') }}</a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <div class="text-center py-5">
+            <div class="display-1 text-secondary opacity-25 mb-3">
+                <i class="bi bi-file-earmark-x"></i>
+            </div>
+            <h5 class="text-secondary">{{ _('No CVs found') }}</h5>
+            <p class="text-secondary opacity-75">{{ _('Upload your first CV to get AI-powered feedback.') }}</p>
+            <a href="{{ url_for('main.upload') }}" class="btn btn-primary mt-2 rounded-pill px-4">{{ _('Upload Now') }}</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12 d-flex justify-content-between align-items-center">
+        <div>
+            <h2 class="mb-0">{{ _('Analysis Results') }}</h2>
+            <p class="text-secondary mt-1">{{ _('For') }} {{ analysis.cv.file_path.split('\\')[-1] }}</p>
+        </div>
+        <a href="{{ url_for('main.dashboard') }}" class="btn btn-outline-light rounded-pill px-4">{{ _('Back to Dashboard') }}</a>
+    </div>
+</div>
+
+<div class="row g-4">
+    <!-- Overall Score -->
+    <div class="col-lg-4">
+        <div class="glass-card p-4 h-100 text-center d-flex flex-column justify-content-center">
+            <h4 class="mb-4 text-secondary">{{ _('Overall Score') }}</h4>
+            {% set score = analysis.overall_score|round(1) %}
+            <div class="score-circle mb-4" style="--progress: {{ score }}%; {% if score >= 80 %}--accent: #10b981;{% elif score >= 60 %}--accent: #f59e0b;{% else %}--accent: #ef4444;{% endif %}">
+                <span class="{% if score >= 80 %}text-success{% elif score >= 60 %}text-warning{% else %}text-danger{% endif %}">{{ score }}%</span>
+            </div>
+            <p class="text-secondary">
+                {% if score >= 80 %}
+                    {{ _('Excellent CV! Just a few minor tweaks needed.') }}
+                {% elif score >= 60 %}
+                    {{ _('Good start, but needs significant improvements.') }}
+                {% else %}
+                    {{ _('Needs a major rewrite to be competitive.') }}
+                {% endif %}
+            </p>
+        </div>
+    </div>
+    
+    <!-- Breakdown -->
+    <div class="col-lg-8">
+        <div class="glass-card p-4 h-100">
+            <h4 class="mb-4">{{ _('Score Breakdown') }}</h4>
+            
+            <div class="mb-4">
+                <div class="d-flex justify-content-between mb-1">
+                    <span>{{ _('Structure & Flow') }}</span>
+                    <span class="text-primary fw-bold">{{ analysis.structure_score|round(1) }}%</span>
+                </div>
+                <div class="progress-bar-custom">
+                    <div class="progress-bar-fill" style="width: {{ analysis.structure_score }}%;"></div>
+                </div>
+            </div>
+            
+            <div class="mb-4">
+                <div class="d-flex justify-content-between mb-1">
+                    <span>{{ _('Skills Match') }}</span>
+                    <span class="text-primary fw-bold">{{ analysis.skills_score|round(1) }}%</span>
+                </div>
+                <div class="progress-bar-custom">
+                    <div class="progress-bar-fill" style="width: {{ analysis.skills_score }}%;"></div>
+                </div>
+            </div>
+            
+            <div class="mb-4">
+                <div class="d-flex justify-content-between mb-1">
+                    <span>{{ _('Formatting') }}</span>
+                    <span class="text-primary fw-bold">{{ analysis.formatting_score|round(1) }}%</span>
+                </div>
+                <div class="progress-bar-custom">
+                    <div class="progress-bar-fill" style="width: {{ analysis.formatting_score }}%;"></div>
+                </div>
+            </div>
+            
+            <div class="mb-0">
+                <div class="d-flex justify-content-between mb-1">
+                    <span>{{ _('Content & Clarity') }}</span>
+                    <span class="text-primary fw-bold">{{ analysis.content_score|round(1) }}%</span>
+                </div>
+                <div class="progress-bar-custom">
+                    <div class="progress-bar-fill" style="width: {{ analysis.content_score }}%;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- AI Feedback -->
+    <div class="col-12 mt-4">
+        <div class="glass-card p-4">
+            <h4 class="mb-4 d-flex align-items-center">
+                <i class="bi bi-robot text-primary me-2"></i> {{ _('AI-Generated Feedback') }}
+            </h4>
+            
+            <div class="row">
+                <div class="col-md-6 border-end border-secondary border-opacity-25">
+                    <h5 class="text-secondary mb-3"><i class="bi bi-chat-left-text me-2"></i> {{ _('General Overview') }}</h5>
+                    <p class="mb-4 mb-md-0" style="line-height: 1.8;">
+                        {{ feedback.feedback_text }}
+                    </p>
+                </div>
+                <div class="col-md-6 ps-md-4">
+                    <h5 class="text-secondary mb-3"><i class="bi bi-lightbulb me-2"></i> {{ _('Actionable Suggestions') }}</h5>
+                    <div class="bg-primary bg-opacity-10 rounded p-4 border border-primary border-opacity-25">
+                        <ul class="mb-0 text-white" style="line-height: 1.8;">
+                            {% for suggestion in feedback.suggestions.split('\n') %}
+                                {% if suggestion.strip() and not suggestion.startswith('Recommended Job Positions:') and not suggestion.startswith('Tavsiya Etilgan Ish O\'rinlari:') %}
+                                    <li class="mb-2">{{ suggestion.replace('- ', '') }}</li>
+                                {% endif %}
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            {% if recommended_roles %}
+            <div class="row mt-4 pt-4 border-top border-secondary border-opacity-25">
+                <div class="col-12">
+                    <h5 class="text-secondary mb-3"><i class="bi bi-briefcase me-2"></i> {{ _('Recommended Job Positions:') }}</h5>
+                    <div class="d-flex flex-wrap gap-2">
+                        {% for role in recommended_roles %}
+                            <span class="badge bg-success bg-opacity-25 text-success border border-success border-opacity-50 px-3 py-2" style="font-size: 0.95rem;">{{ role }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

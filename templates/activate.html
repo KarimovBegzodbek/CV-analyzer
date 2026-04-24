@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Verification</title>
+</head>
+<body style="margin: 0; padding: 0; background-color: #F8F9FA; font-family: Arial, sans-serif; -webkit-font-smoothing: antialiased;">
+    <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: #F8F9FA; padding: 20px 0;">
+        <tr>
+            <td align="center">
+                <table width="600" border="0" cellspacing="0" cellpadding="0" style="background-color: #FFFFFF; max-width: 600px; width: 100%; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
+                    <!-- Top Logo Area -->
+                    <tr>
+                        <td align="center" style="padding: 30px 0;">
+                            <div style="width: 50px; height: 50px; border: 2px solid #555; border-radius: 50%; display: inline-block; line-height: 50px; font-weight: bold; color: #555; font-size: 14px;">LOGO</div>
+                        </td>
+                    </tr>
+                    
+                    <!-- Red Banner with Envelope -->
+                    <tr>
+                        <td align="center" style="background-color: #E24A4A; padding: 30px 0;">
+                            <div style="background-color: #FFFFFF; width: 70px; height: 70px; border-radius: 50%; display: inline-block; line-height: 70px;">
+                                <!-- Simple CSS Envelope fallback if images don't load -->
+                                <img src="https://img.icons8.com/ios/50/E24A4A/new-post.png" alt="Email" style="width: 40px; height: 40px; vertical-align: middle; margin-top: 15px;">
+                            </div>
+                        </td>
+                    </tr>
+                    
+                    <!-- Main Content Area -->
+                    <tr>
+                        <td style="padding: 40px 40px 20px 40px;">
+                            <h1 style="color: #2D3748; font-size: 28px; margin: 0 0 20px 0; font-weight: normal;">Email verification</h1>
+                            
+                            <p style="color: #4A5568; font-size: 15px; line-height: 1.6; margin: 0 0 10px 0;">Hi {{ first_name }},</p>
+                            
+                            <p style="color: #4A5568; font-size: 15px; line-height: 1.6; margin: 0 0 30px 0;">
+                                You're almost set to start enjoying AI CV Analyzer. Simply click the link below to verify your email address and get started. The link expires in 48 hours.
+                            </p>
+                            
+                            <div style="text-align: center; margin-bottom: 40px;">
+                                <a href="{{ confirm_url }}" style="background-color: #E24A4A; color: #FFFFFF; text-decoration: none; padding: 14px 30px; border-radius: 4px; font-weight: bold; display: inline-block; font-size: 16px;">
+                                    Verify my email address
+                                </a>
+                            </div>
+                            
+                            <!-- Divider -->
+                            <hr style="border: none; border-top: 1px solid #E24A4A; margin: 0 0 30px 0;">
+                            
+                            <!-- Footer Information -->
+                            <div style="text-align: center;">
+                                <!-- Social Icons -->
+                                <div style="margin-bottom: 20px;">
+                                    <a href="#" style="text-decoration: none; margin: 0 5px;"><img src="https://img.icons8.com/color/48/000000/facebook-new.png" width="30" height="30" alt="Facebook"></a>
+                                    <a href="#" style="text-decoration: none; margin: 0 5px;"><img src="https://img.icons8.com/color/48/000000/snapchat-lite.png" width="30" height="30" alt="Snapchat"></a>
+                                    <a href="#" style="text-decoration: none; margin: 0 5px;"><img src="https://img.icons8.com/color/48/000000/linkedin.png" width="30" height="30" alt="LinkedIn"></a>
+                                    <a href="#" style="text-decoration: none; margin: 0 5px;"><img src="https://img.icons8.com/fluency/48/000000/instagram-new.png" width="30" height="30" alt="Instagram"></a>
+                                </div>
+                                
+                                <p style="color: #718096; font-size: 12px; margin: 0 0 15px 0;">
+                                    800 Broadway Suit 1500 New York, NY 000423, USA
+                                </p>
+                                
+                                <p style="color: #718096; font-size: 12px; margin: 0; font-weight: bold;">
+                                    | <a href="#" style="color: #718096; text-decoration: none;">Privacy Policy</a> | <a href="#" style="color: #718096; text-decoration: none;">Contact Details</a> |
+                                </p>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+                
+                <!-- Bottom Unsubscribe -->
+                <table width="600" border="0" cellspacing="0" cellpadding="0" style="max-width: 600px; width: 100%; margin-top: 15px;">
+                    <tr>
+                        <td align="left">
+                            <a href="#" style="color: #A0AEC0; font-size: 11px; text-decoration: underline;">Unsubscribe</a>
+                        </td>
+                        <td align="right">
+                            <span style="color: #A0AEC0; font-size: 11px;">⚡ by AI CV Analyzer</span>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>
