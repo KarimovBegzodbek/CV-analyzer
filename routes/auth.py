@@ -23,12 +23,44 @@ def confirm_token(token, expiration=3600):
         return False
     return email
 
+import requests
+import os
+
 def send_email(to, subject, template, confirm_url=None):
+    api_key = current_app.config.get('MAIL_PASSWORD')
+    sender_email = current_app.config.get('MAIL_DEFAULT_SENDER')
+    
+    # Check if we should use Brevo's HTTP API instead of SMTP
+    if api_key and api_key.startswith('xsmtpsib-'):
+        url = "https://api.brevo.com/v3/smtp/email"
+        headers = {
+            "accept": "application/json",
+            "api-key": api_key,
+            "content-type": "application/json"
+        }
+        payload = {
+            "sender": {"email": sender_email},
+            "to": [{"email": to}],
+            "subject": subject,
+            "htmlContent": template
+        }
+        try:
+            response = requests.post(url, json=payload, headers=headers, timeout=10)
+            if response.status_code in [200, 201, 202]:
+                return True
+            else:
+                print(f"Brevo API Error: {response.text}")
+                return False
+        except Exception as e:
+            print(f"Brevo API Exception: {e}")
+            return False
+
+    # Fallback to standard SMTP
     msg = Message(
         subject,
         recipients=[to],
         html=template,
-        sender=current_app.config['MAIL_DEFAULT_SENDER']
+        sender=sender_email
     )
     try:
         mail.send(msg)
