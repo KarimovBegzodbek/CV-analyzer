@@ -31,7 +31,7 @@ def send_email(to, subject, template, confirm_url=None):
     sender_email = current_app.config.get('MAIL_DEFAULT_SENDER')
     
     # Check if we should use Brevo's HTTP API instead of SMTP
-    if api_key and api_key.startswith('xsmtpsib-'):
+    if api_key and (api_key.startswith('xsmtpsib-') or api_key.startswith('xkeysib-')):
         url = "https://api.brevo.com/v3/smtp/email"
         headers = {
             "accept": "application/json",
