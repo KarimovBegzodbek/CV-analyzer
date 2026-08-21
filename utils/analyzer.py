@@ -34,8 +34,9 @@ def analyze_cv(text):
     """
     # Setup Gemini API inside the function to ensure env vars are loaded
     api_key = os.environ.get("GEMINI_API_KEY")
+
     if api_key:
-        genai.configure(api_key=api_key)
+        client = genai.Client(api_key=api_key)
         
         prompt = f"""
         You are an expert HR recruiter and ATS optimizer. Analyze the following CV text and provide scores out of 100 for four categories:
@@ -75,20 +76,16 @@ def analyze_cv(text):
         """
         
         try:
-            model = genai.GenerativeModel(
-                'gemini-3.6-flash',
-                generation_config={
+            response = client.models.generate_content(
+                model="gemini-3.6-flash",
+                contents=prompt,
+                config={
                     "response_mime_type": "application/json",
                     "max_output_tokens": 1000
                 }
             )
             
-            response = model.generate_content(
-                prompt,
-                request_options={"timeout": 120}
-            )
             response_text = response.text.strip()
-            
             # Robust JSON extraction
             start = response_text.find("{")
             end = response_text.rfind("}") + 1
