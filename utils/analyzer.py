@@ -3,7 +3,7 @@ import json
 import random
 import PyPDF2
 import docx
-import google.generativeai as genai
+from google import genai
 
 def extract_text_from_pdf(filepath):
     text = ""
