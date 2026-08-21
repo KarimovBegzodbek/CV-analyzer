@@ -75,8 +75,18 @@ def analyze_cv(text):
         """
         
         try:
-            model = genai.GenerativeModel('gemini-flash-latest', generation_config={"response_mime_type": "application/json"})
-            response = model.generate_content(prompt)
+            model = genai.GenerativeModel(
+                'gemini-3.6-flash',
+                generation_config={
+                    "response_mime_type": "application/json",
+                    "max_output_tokens": 1000
+                }
+            )
+            
+            response = model.generate_content(
+                prompt,
+                request_options={"timeout": 120}
+            )
             response_text = response.text.strip()
             
             # Robust JSON extraction
