@@ -10,7 +10,6 @@ Flask-WTF==1.2.1
 Flask-Babel==4.0.0
 filetype==1.2.0
 Flask-Mail==0.10.0
-google-generativeai==0.5.2
 google-genai
 gunicorn==22.0.0
 PyPDF2==3.0.1
