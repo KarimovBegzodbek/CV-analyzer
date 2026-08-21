@@ -10,7 +10,7 @@ The system is designed specifically to support graduates in Uzbekistan by provid
 
 ## Live Demo
 
-https://cv-analyzer-xzez.onrender.com
+[https://cv-analyzer-xzez.onrender.com](https://cv-analyzer-5hod.onrender.com)
 
 > Note: The live demo may take a few seconds to load due to free hosting limitations.
 
